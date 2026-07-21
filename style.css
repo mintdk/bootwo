@@ -1,1 +1,122 @@
+main{
+    width:100%;
+    padding:40px 8%;
+}
 
+
+.hero{
+
+    margin-top:40px;
+    margin-bottom:60px;
+
+}
+
+.hero h1{
+
+    color:#444;
+    margin-bottom:20px;
+
+}
+
+.hero p{
+
+    font-size:1.1rem;
+
+}
+
+.hero .btn-primary{
+
+    margin-top:15px;
+
+}
+
+
+.features{
+
+    margin-bottom:60px;
+
+}
+
+.features .card{
+
+    text-align:center;
+    transition:0.3s;
+
+}
+
+.features .card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.features h2{
+
+    margin-bottom:15px;
+    font-size:1.4rem;
+
+}
+
+.features p{
+
+    line-height:1.6;
+
+}
+
+
+.about{
+
+    text-align:center;
+    margin-bottom:60px;
+
+}
+
+.about h2{
+
+    margin-bottom:20px;
+
+}
+
+.about p{
+
+    line-height:1.8;
+    max-width:850px;
+    margin:auto;
+
+}
+
+
+footer p{
+
+    margin:8px 0;
+
+}
+
+
+@media (max-width:768px){
+
+    main{
+
+        padding:25px;
+
+    }
+
+    .hero{
+
+        margin-top:20px;
+
+    }
+
+    .hero h1{
+
+        font-size:2rem;
+
+    }
+
+    .features{
+
+        gap:20px;
+
+    }
+
+}
