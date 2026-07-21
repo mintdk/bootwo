@@ -1,1 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
 
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Iniciar sesión | Bootwo</title>
+
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="icon" href="bootwo/assets/logo.png">
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <img src="bootwo/assets/logo.png" alt="Bootwo" class="logo">
+
+            <h1>Bootwo</h1>
+
+            <p>Conociéndonos un día a la vez.</p>
+
+            <form id="loginForm">
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Correo electrónico"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Contraseña"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="btn-primary">
+
+                    Iniciar sesión
+
+                </button>
+
+            </form>
+
+            <p id="error" class="error">
+                Correo o contraseña incorrectos.
+            </p>
+
+            <p style="margin-top:25px; font-size:.9rem;">
+
+                ¿Problemas para acceder?<br>
+                Contacta al administrador.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <script type="module" src="auth.js"></script>
+
+</body>
+
+</html>
