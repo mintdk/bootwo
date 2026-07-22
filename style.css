@@ -321,11 +321,13 @@ footer p{
 
     display:grid;
 
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns:repeat(4,220px);
+
+    justify-content:center;
 
     gap:25px;
 
-    margin:35px 0;
+    margin:40px auto;
 
 }
 
