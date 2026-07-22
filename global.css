@@ -237,3 +237,80 @@ footer{
     }
 
 }
+
+.login-container{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+}
+
+.login-card{
+
+    width:100%;
+    max-width:430px;
+
+    background:var(--blanco);
+
+    border:2px solid var(--azul);
+
+    border-radius:25px;
+
+    padding:40px;
+
+    text-align:center;
+
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
+
+}
+
+.login-card input{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-bottom:18px;
+
+    border:2px solid var(--azul);
+
+    border-radius:15px;
+
+    outline:none;
+
+    font-size:1rem;
+
+}
+
+.login-card input:focus{
+
+    border-color:var(--rosa);
+
+}
+
+.login-card button{
+
+    width:100%;
+
+    border:none;
+
+    cursor:pointer;
+
+}
+
+.error{
+
+    color:#d9534f;
+
+    margin-top:15px;
+
+    display:none;
+
+}
