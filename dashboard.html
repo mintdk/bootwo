@@ -31,28 +31,42 @@
 
         <div class="logo-container">
 
-            <img
-                src="bootwo/assets/logo.png"
-                class="logo"
-                alt="Bootwo">
+            <a href="dashboard.html">
+
+                <img
+                    src="bootwo/assets/logo.png"
+                    class="logo"
+                    alt="Logo de Bootwo">
+
+            </a>
 
         </div>
 
+
         <nav class="dashboard-nav">
 
-            <a href="dashboard.html">
+            <a
+                href="dashboard.html"
+                class="active">
+
                 Inicio
+
             </a>
 
             <a href="historial.html">
+
                 Historial
+
             </a>
 
             <a href="perfil.html">
+
                 Perfil
+
             </a>
 
             <button
+                type="button"
                 id="logoutBtn"
                 class="btn-login">
 
@@ -74,12 +88,15 @@
                 Holi,
 
                 <span id="userName">
+
                     Usuario
+
                 </span>
 
                 ❤️
 
             </h1>
+
 
             <p class="welcome-message">
 
@@ -90,14 +107,19 @@
 
             <div class="info-grid">
 
+
                 <div class="info-item">
 
                     <h3>
+
                         📅 Días juntos
+
                     </h3>
 
                     <p id="daysTogether">
+
                         --
+
                     </p>
 
                 </div>
@@ -106,10 +128,17 @@
                 <div class="info-item">
 
                     <h3>
+
                         ❤️ Índice de conexión
+
                     </h3>
 
-                    <div class="progress">
+                    <div
+                        class="progress"
+                        role="progressbar"
+                        aria-label="Índice de conexión compartido"
+                        aria-valuemin="0"
+                        aria-valuemax="100">
 
                         <div
                             class="progress-bar"
@@ -120,8 +149,18 @@
                     </div>
 
                     <p id="connectionValue">
+
                         --%
+
                     </p>
+
+                    <small
+                        id="connectionStatus"
+                        class="indicator-status">
+
+                        Esperando los registros de ambos.
+
+                    </small>
 
                 </div>
 
@@ -129,10 +168,17 @@
                 <div class="info-item">
 
                     <h3>
+
                         💞 Ganas de estar juntos
+
                     </h3>
 
-                    <div class="progress">
+                    <div
+                        class="progress"
+                        role="progressbar"
+                        aria-label="Ganas compartidas de estar juntos"
+                        aria-valuemin="0"
+                        aria-valuemax="100">
 
                         <div
                             class="progress-bar"
@@ -143,28 +189,42 @@
                     </div>
 
                     <p id="relationshipValue">
+
                         --%
+
                     </p>
+
+                    <small
+                        id="relationshipStatus"
+                        class="indicator-status">
+
+                        El resultado aparecerá cuando ambos respondan.
+
+                    </small>
 
                 </div>
 
             </div>
 
 
-            <button
-                type="button"
-                id="missYouBtn"
-                class="btn-primary">
+            <div class="miss-you-container">
 
-                💌 Te extraño
+                <button
+                    type="button"
+                    id="missYouBtn"
+                    class="btn-primary">
 
-            </button>
+                    💌 Te extraño
 
-            <p
-                id="missYouStatus"
-                class="miss-you-status"
-                aria-live="polite">
-            </p>
+                </button>
+
+                <p
+                    id="missYouStatus"
+                    class="miss-you-status"
+                    aria-live="polite">
+                </p>
+
+            </div>
 
         </section>
 
@@ -174,14 +234,46 @@
             id="dailyStatusCard">
 
             <h2>
+
                 ❤️ Registro de hoy
+
             </h2>
 
             <p id="dailyStatusText">
 
-                Cargando tu registro diario...
+                Cargando el estado de los registros...
 
             </p>
+
+            <div
+                id="coupleDailyStatus"
+                class="couple-daily-status">
+
+                <p>
+
+                    <span id="myRecordIndicator">
+
+                        ⚪
+
+                    </span>
+
+                    Tu registro
+
+                </p>
+
+                <p>
+
+                    <span id="partnerRecordIndicator">
+
+                        ⚪
+
+                    </span>
+
+                    Registro de tu pareja
+
+                </p>
+
+            </div>
 
             <a
                 href="registrod.html"
@@ -198,41 +290,77 @@
         <section
             class="card received-message-card"
             id="receivedMessageCard"
+            aria-live="polite"
             hidden>
 
-            <h2>
-                💌 Tu pareja te extraña
+            <div
+                class="received-message-icon"
+                aria-hidden="true">
+
+                💌
+
+            </div>
+
+            <h2 id="receivedMessageTitle">
+
+                Tu pareja te extraña
+
             </h2>
 
             <p id="receivedMessageText">
 
-                Tu pareja te envió un mensaje.
+                Tu pareja te envió un “Te extraño”.
 
             </p>
 
-            <button
-                type="button"
-                id="markMessageReadBtn"
-                class="btn-primary">
+            <p
+                id="receivedMessageTime"
+                class="received-message-time">
+            </p>
 
-                Marcar como visto
+            <div class="received-message-actions">
 
-            </button>
+                <button
+                    type="button"
+                    id="markMessageReadBtn"
+                    class="btn-primary">
+
+                    Marcar como visto
+
+                </button>
+
+            </div>
 
         </section>
 
 
-        <section class="quick-access">
+        <section
+            class="quick-access"
+            aria-label="Accesos rápidos">
 
             <a
                 href="registrod.html"
                 class="card quick-card">
 
-                ❤️
+                <span
+                    class="quick-card-icon"
+                    aria-hidden="true">
+
+                    ❤️
+
+                </span>
 
                 <h3>
+
                     Registro diario
+
                 </h3>
+
+                <p>
+
+                    Comparte cómo te sientes hoy.
+
+                </p>
 
             </a>
 
@@ -241,11 +369,25 @@
                 href="historial.html"
                 class="card quick-card">
 
-                📅
+                <span
+                    class="quick-card-icon"
+                    aria-hidden="true">
+
+                    📅
+
+                </span>
 
                 <h3>
+
                     Historial
+
                 </h3>
+
+                <p>
+
+                    Revisa tus registros anteriores.
+
+                </p>
 
             </a>
 
@@ -254,11 +396,25 @@
                 href="estadisticas.html"
                 class="card quick-card">
 
-                📊
+                <span
+                    class="quick-card-icon"
+                    aria-hidden="true">
+
+                    📊
+
+                </span>
 
                 <h3>
+
                     Estadísticas
+
                 </h3>
+
+                <p>
+
+                    Observa la evolución de la relación.
+
+                </p>
 
             </a>
 
@@ -267,11 +423,25 @@
                 href="perfil.html"
                 class="card quick-card">
 
-                👤
+                <span
+                    class="quick-card-icon"
+                    aria-hidden="true">
+
+                    👤
+
+                </span>
 
                 <h3>
+
                     Perfil
+
                 </h3>
+
+                <p>
+
+                    Administra tu información personal.
+
+                </p>
 
             </a>
 
@@ -283,7 +453,9 @@
             id="partnerCard">
 
             <h2>
+
                 💞 Pareja
+
             </h2>
 
             <p>
@@ -300,11 +472,15 @@
     <footer>
 
         <p>
+
             Bootwo 2026
+
         </p>
 
         <p>
+
             Conociéndonos un día a la vez.
+
         </p>
 
     </footer>
