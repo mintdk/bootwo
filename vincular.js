@@ -1,66 +1,51 @@
-import { auth } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 
 import {
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-
-const myName = document.getElementById("myName");
-const partnerName = document.getElementById("partnerName");
-const datingDate = document.getElementById("datingDate");
+    doc,
+    setDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const generateBtn = document.getElementById("generateBtn");
-
 const generatedContainer = document.getElementById("generatedContainer");
 const generatedCode = document.getElementById("generatedCode");
 const copyBtn = document.getElementById("copyBtn");
 
-const inviteCode = document.getElementById("inviteCode");
-const linkBtn = document.getElementById("linkBtn");
+function generarCodigo() {
 
-let currentCode = "";
+    const caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
+    let codigo = "BTW-";
 
-onAuthStateChanged(auth,(user)=>{
+    for (let i = 0; i < 5; i++) {
 
-    if(!user){
-
-        window.location.href="login.html";
-
-    }
-
-});
-
-
-function generateCode(){
-
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-    let code = "BTW-";
-
-    for(let i=0;i<5;i++){
-
-        code += chars.charAt(
-            Math.floor(Math.random()*chars.length)
+        codigo += caracteres.charAt(
+            Math.floor(Math.random() * caracteres.length)
         );
 
     }
 
-    return code;
+    return codigo;
 
 }
 
+generateBtn.addEventListener("click", async () => {
 
-generateBtn.addEventListener("click",()=>{
+    const user = auth.currentUser;
 
-    if(
+    if (!user) {
 
-        myName.value.trim()==="" ||
+        alert("Debes iniciar sesión.");
 
-        partnerName.value.trim()==="" ||
+        return;
 
-        datingDate.value===""
+    }
 
-    ){
+    const myName = document.getElementById("myName").value.trim();
+    const partnerName = document.getElementById("partnerName").value.trim();
+    const datingDate = document.getElementById("datingDate").value;
+
+    if (!myName || !partnerName || !datingDate) {
 
         alert("Completa todos los campos.");
 
@@ -68,40 +53,81 @@ generateBtn.addEventListener("click",()=>{
 
     }
 
-    currentCode = generateCode();
-
-    generatedCode.textContent = currentCode;
-
-    generatedContainer.style.display="block";
-
-});
+    try {
 
 
-copyBtn.addEventListener("click",async()=>{
+        await setDoc(doc(db, "users", user.uid), {
 
-    try{
+            email: user.email,
 
-        await navigator.clipboard.writeText(currentCode);
+            displayName: myName,
 
-        copyBtn.textContent="✅ Código copiado";
+            partnerId: null,
 
-        setTimeout(()=>{
+            partnerName: "",
 
-            copyBtn.textContent="Copiar código";
+            datingDate: null,
 
-        },2000);
+            linked: false,
 
-    }catch{
+            createdAt: serverTimestamp()
 
-        alert("No fue posible copiar el código.");
+        }, { merge: true });
+
+
+        const codigo = generarCodigo();
+
+
+        await setDoc(doc(db, "inviteCodes", codigo), {
+
+            code: codigo,
+
+            ownerId: user.uid,
+
+            ownerEmail: user.email,
+
+            ownerName: myName,
+
+            partnerName: partnerName,
+
+            datingDate: datingDate,
+
+            used: false,
+
+            createdAt: serverTimestamp()
+
+        });
+
+        generatedCode.textContent = codigo;
+
+        generatedContainer.style.display = "block";
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert("Ocurrió un error al generar el código.");
 
     }
 
 });
 
+copyBtn.addEventListener("click", async () => {
 
-linkBtn.addEventListener("click",()=>{
+    try {
 
-    alert("En el siguiente paso conectaremos Firebase ❤️");
+        await navigator.clipboard.writeText(generatedCode.textContent);
+
+        alert("Código copiado.");
+
+    }
+
+    catch {
+
+        alert("No se pudo copiar el código.");
+
+    }
 
 });
