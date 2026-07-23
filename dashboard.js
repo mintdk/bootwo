@@ -7,96 +7,278 @@ import {
 
 import {
     doc,
-    getDoc
+    getDoc,
+    collection,
+    addDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
-const userName = document.getElementById("userName");
-const daysTogether = document.getElementById("daysTogether");
-const partnerCard = document.getElementById("partnerCard");
-const logoutBtn = document.getElementById("logoutBtn");
+const userName =
+    document.getElementById("userName");
+
+const daysTogether =
+    document.getElementById("daysTogether");
+
+const connectionBar =
+    document.getElementById("connectionBar");
+
+const connectionValue =
+    document.getElementById("connectionValue");
+
+const relationshipBar =
+    document.getElementById("relationshipBar");
+
+const relationshipValue =
+    document.getElementById("relationshipValue");
+
+const partnerCard =
+    document.getElementById("partnerCard");
+
+const missYouBtn =
+    document.getElementById("missYouBtn");
+
+const missYouStatus =
+    document.getElementById("missYouStatus");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+
+let currentUser = null;
+let currentUserData = null;
 
 
 
-function calcularDiasJuntos(fechaNoviazgo) {
+function getLocalDateKey() {
 
-    if (!fechaNoviazgo) {
+    const today = new Date();
 
-        return null;
+    const year = today.getFullYear();
 
-    }
+    const month = String(
+        today.getMonth() + 1
+    ).padStart(2, "0");
 
-    let fechaInicio;
+    const day = String(
+        today.getDate()
+    ).padStart(2, "0");
 
-
-
-    if (typeof fechaNoviazgo === "string") {
-
-        fechaInicio = new Date(
-            `${fechaNoviazgo}T00:00:00`
-        );
-
-    }
-
-
-    else if (
-        typeof fechaNoviazgo === "object" &&
-        typeof fechaNoviazgo.toDate === "function"
-    ) {
-
-        fechaInicio = fechaNoviazgo.toDate();
-
-    }
-
-    else {
-
-        return null;
-
-    }
-
-
-    if (Number.isNaN(fechaInicio.getTime())) {
-
-        console.error(
-            "Fecha de noviazgo inválida:",
-            fechaNoviazgo
-        );
-
-        return null;
-
-    }
-
-
-    const hoy = new Date();
-
-    fechaInicio.setHours(0, 0, 0, 0);
-    hoy.setHours(0, 0, 0, 0);
-
-
-    const diferenciaEnMilisegundos =
-        hoy.getTime() - fechaInicio.getTime();
-
-    const milisegundosPorDia =
-        1000 * 60 * 60 * 24;
-
-    const resultado = Math.floor(
-        diferenciaEnMilisegundos /
-        milisegundosPorDia
-    );
-
-    return Math.max(resultado, 0);
+    return `${year}-${month}-${day}`;
 
 }
 
 
-function mostrarPareja(userData) {
+function calculateDaysTogether(datingDate) {
 
-    if (!partnerCard) {
+    if (!datingDate) {
 
-        return;
+        return null;
 
     }
 
+    let startDate;
+
+
+    if (typeof datingDate === "string") {
+
+        startDate = new Date(
+            `${datingDate}T00:00:00`
+        );
+
+    } else if (
+        typeof datingDate === "object" &&
+        typeof datingDate.toDate === "function"
+    ) {
+
+        startDate = datingDate.toDate();
+
+    } else {
+
+        return null;
+
+    }
+
+
+    if (Number.isNaN(startDate.getTime())) {
+
+        return null;
+
+    }
+
+
+    const today = new Date();
+
+    startDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+
+    const difference =
+        today.getTime() -
+        startDate.getTime();
+
+    const millisecondsPerDay =
+        1000 * 60 * 60 * 24;
+
+    return Math.max(
+        Math.floor(
+            difference / millisecondsPerDay
+        ),
+        0
+    );
+
+}
+
+
+function calculateConnectionIndex(record) {
+
+    const love =
+        Number(record.love || 0);
+
+    const happiness =
+        Number(record.happiness || 0);
+
+    const togetherDesire =
+        Number(record.togetherDesire || 0);
+
+    const sadness =
+        Number(record.sadness || 0);
+
+    const anger =
+        Number(record.anger || 0);
+
+    const stress =
+        Number(record.stress || 0);
+
+
+    /*
+        Las emociones positivas conservan
+        su valor.
+
+        Las emociones negativas se invierten:
+
+        tristeza 20 = bienestar 80
+    */
+
+    const sadnessBalance =
+        100 - sadness;
+
+    const angerBalance =
+        100 - anger;
+
+    const stressBalance =
+        100 - stress;
+
+
+    const total =
+        love +
+        happiness +
+        togetherDesire +
+        sadnessBalance +
+        angerBalance +
+        stressBalance;
+
+
+    const connectionIndex =
+        Math.round(total / 6);
+
+
+    return Math.min(
+        Math.max(connectionIndex, 0),
+        100
+    );
+
+}
+
+
+function updateProgressBar(
+    bar,
+    textElement,
+    value
+) {
+
+    const safeValue = Math.min(
+        Math.max(Number(value) || 0, 0),
+        100
+    );
+
+    bar.style.width =
+        `${safeValue}%`;
+
+    textElement.textContent =
+        `${safeValue}%`;
+
+}
+
+
+function clearDailyIndicators() {
+
+    connectionBar.style.width = "0%";
+    connectionValue.textContent = "--%";
+
+    relationshipBar.style.width = "0%";
+    relationshipValue.textContent = "--%";
+
+}
+
+
+async function loadTodayRecord(userId) {
+
+    const dateKey =
+        getLocalDateKey();
+
+    const recordId =
+        `${userId}_${dateKey}`;
+
+    const recordReference = doc(
+        db,
+        "dailyRecords",
+        recordId
+    );
+
+    const recordSnapshot =
+        await getDoc(recordReference);
+
+
+    if (!recordSnapshot.exists()) {
+
+        clearDailyIndicators();
+
+        return null;
+
+    }
+
+
+    const record =
+        recordSnapshot.data();
+
+
+    const connectionIndex =
+        calculateConnectionIndex(record);
+
+    const togetherDesire =
+        Number(record.togetherDesire || 0);
+
+
+    updateProgressBar(
+        connectionBar,
+        connectionValue,
+        connectionIndex
+    );
+
+    updateProgressBar(
+        relationshipBar,
+        relationshipValue,
+        togetherDesire
+    );
+
+
+    return record;
+
+}
+
+
+function showPartnerInformation(userData) {
 
     if (
         userData.linked === true &&
@@ -118,11 +300,12 @@ function mostrarPareja(userData) {
             </p>
 
             <p>
-                Ya pueden comenzar a compartir
-                sus emociones y registros diarios.
+                Ya pueden compartir sus registros diarios.
             </p>
 
         `;
+
+        missYouBtn.disabled = false;
 
         return;
 
@@ -149,128 +332,263 @@ function mostrarPareja(userData) {
 
     `;
 
+    missYouBtn.disabled = true;
+
 }
 
+async function loadUserData(user) {
 
-onAuthStateChanged(auth, async (user) => {
+    const userReference = doc(
+        db,
+        "users",
+        user.uid
+    );
 
-    if (!user) {
+    const userSnapshot =
+        await getDoc(userReference);
 
-        window.location.href = "login.html";
+
+    if (!userSnapshot.exists()) {
+
+        currentUserData = {
+
+            displayName:
+                user.email?.split("@")[0] ||
+                "Usuario",
+
+            datingDate: null,
+
+            partnerId: null,
+
+            partnerName: null,
+
+            linked: false
+
+        };
 
         return;
 
     }
 
 
-    try {
+    currentUserData =
+        userSnapshot.data();
 
-        const userReference = doc(
-            db,
-            "users",
-            user.uid
+}
+
+
+async function loadDashboard(user) {
+
+    await loadUserData(user);
+
+
+    userName.textContent =
+        currentUserData.displayName ||
+        user.email?.split("@")[0] ||
+        "Usuario";
+
+
+    const days =
+        calculateDaysTogether(
+            currentUserData.datingDate
         );
 
-        const userSnapshot = await getDoc(
-            userReference
-        );
+
+    daysTogether.textContent =
+        days === null
+            ? "--"
+            : days;
 
 
+    showPartnerInformation(
+        currentUserData
+    );
 
-        if (!userSnapshot.exists()) {
+
+    await loadTodayRecord(
+        user.uid
+    );
+
+}
+
+
+onAuthStateChanged(
+    auth,
+    async (user) => {
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+        currentUser = user;
+
+
+        try {
+
+            await loadDashboard(user);
+
+        } catch (error) {
+
+            console.error(
+                "Error al cargar el dashboard:",
+                error
+            );
 
             userName.textContent =
-                user.email.split("@")[0];
+                user.email?.split("@")[0] ||
+                "Usuario";
 
             daysTogether.textContent = "--";
 
-            mostrarPareja({
-                linked: false,
-                partnerId: null
-            });
+            clearDailyIndicators();
+
+        }
+
+    }
+);
+
+
+
+missYouBtn.addEventListener(
+    "click",
+    async () => {
+
+        if (
+            !currentUser ||
+            !currentUserData?.partnerId
+        ) {
+
+            missYouStatus.textContent =
+                "Primero debes vincular una pareja.";
+
+            missYouStatus.className =
+                "miss-you-status error";
 
             return;
 
         }
 
 
-        const userData = userSnapshot.data();
+        try {
+
+            missYouBtn.disabled = true;
+
+            missYouBtn.textContent =
+                "Enviando...";
 
 
-        /* Nombre */
+            const relationshipId = [
+                currentUser.uid,
+                currentUserData.partnerId
+            ]
+                .sort()
+                .join("_");
 
-        if (userData.displayName) {
 
-            userName.textContent =
-                userData.displayName;
+            await addDoc(
+                collection(
+                    db,
+                    "missYouMessages"
+                ),
+                {
 
-        } else {
+                    senderId:
+                        currentUser.uid,
 
-            userName.textContent =
-                user.email.split("@")[0];
+                    senderName:
+                        currentUserData.displayName ||
+                        currentUser.email?.split("@")[0] ||
+                        "Tu pareja",
+
+                    receiverId:
+                        currentUserData.partnerId,
+
+                    relationshipId,
+
+                    message:
+                        "Te extraño 💌",
+
+                    read: false,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+            );
+
+
+            missYouStatus.textContent =
+                "Tu pareja recibirá tu mensaje 💌";
+
+            missYouStatus.className =
+                "miss-you-status success";
+
+            missYouBtn.textContent =
+                "💌 Enviado";
+
+
+            setTimeout(() => {
+
+                missYouBtn.disabled = false;
+
+                missYouBtn.textContent =
+                    "💌 Te extraño";
+
+                missYouStatus.textContent = "";
+
+                missYouStatus.className =
+                    "miss-you-status";
+
+            }, 4000);
+
+        } catch (error) {
+
+            console.error(
+                "Error al enviar Te extraño:",
+                error
+            );
+
+            missYouStatus.textContent =
+                "No se pudo enviar el mensaje.";
+
+            missYouStatus.className =
+                "miss-you-status error";
+
+            missYouBtn.disabled = false;
+
+            missYouBtn.textContent =
+                "💌 Te extraño";
 
         }
 
-
-        /* Días juntos */
-
-        const dias = calcularDiasJuntos(
-            userData.datingDate
-        );
+    }
+);
 
 
-        if (dias === null) {
+logoutBtn.addEventListener(
+    "click",
+    async () => {
 
-            daysTogether.textContent = "--";
+        try {
 
-        } else {
+            await signOut(auth);
 
-            daysTogether.textContent = dias;
+            window.location.href =
+                "login.html";
+
+        } catch (error) {
+
+            console.error(
+                "Error al cerrar sesión:",
+                error
+            );
 
         }
 
-
-        /* Pareja */
-
-        mostrarPareja(userData);
-
-
-    } catch (error) {
-
-        console.error(
-            "Error al cargar el dashboard:",
-            error
-        );
-
-        userName.textContent =
-            user.email.split("@")[0];
-
-        daysTogether.textContent = "--";
-
     }
-
-});
-
-
-logoutBtn.addEventListener("click", async () => {
-
-    try {
-
-        await signOut(auth);
-
-        window.location.href = "login.html";
-
-    } catch (error) {
-
-        console.error(
-            "Error al cerrar sesión:",
-            error
-        );
-
-        alert(
-            "No se pudo cerrar la sesión."
-        );
-
-    }
-
-});
+);
