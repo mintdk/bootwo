@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vincular pareja | Bootwo</title>
+
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="icon" href="bootwo/assets/logo.png">
+
+</head>
+
+<body>
+
+    <main class="dashboard">
+
+        <div class="card partner-card">
+
+            <img
+                src="bootwo/assets/logo.png"
+                alt="Bootwo"
+                class="logo">
+
+            <h1>❤️ Vincular pareja</h1>
+
+            <p class="welcome-message">
+
+                Conecta tu cuenta con la de tu persona especial para comenzar
+                a compartir emociones, registrar su día y fortalecer su relación.
+
+            </p>
+
+        </div>
+
+
+        <div class="info-grid">
+
+
+            <div class="card">
+
+                <h2>📤 Crear un código</h2>
+
+                <p style="margin-bottom:25px;">
+
+                    Completa la información.
+
+                </p>
+
+                <input
+                    type="text"
+                    id="myName"
+                    placeholder="Tu nombre">
+
+                <input
+                    type="text"
+                    id="partnerName"
+                    placeholder="Nombre de tu pareja">
+
+                <input
+                    type="date"
+                    id="datingDate">
+
+                <button
+                    id="generateBtn"
+                    class="btn-primary">
+
+                    Generar código
+
+                </button>
+
+                <div
+                    id="generatedContainer"
+                    style="display:none; margin-top:30px;">
+
+                    <h3>❤️ Código generado</h3>
+
+                    <h2 id="generatedCode">
+
+                        ABCD1234
+
+                    </h2>
+
+                    <button
+                        id="copyBtn"
+                        class="btn-primary">
+
+                        Copiar código
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h2>📥 Tengo un código</h2>
+
+                <p style="margin-bottom:25px;">
+
+                    Si tu pareja ya creó un código, escríbelo aquí.
+
+                </p>
+
+                <input
+                    type="text"
+                    id="inviteCode"
+                    placeholder="Ej. BTW-8X4K9">
+
+                <button
+                    id="linkBtn"
+                    class="btn-primary">
+
+                    Vincular pareja
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="card partner-card">
+
+            <h2>⚠️ Importante</h2>
+
+            <p>
+
+                La fecha de noviazgo será compartida por ambos perfiles.
+
+            </p>
+
+            <p>
+
+                Una vez vinculados, ambos compartiremos la misma información
+                de la relación.
+
+            </p>
+
+        </div>
+
+    </main>
+
+    <script type="module" src="vincular.js"></script>
+
+</body>
+
+</html>
