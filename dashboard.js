@@ -10,6 +10,12 @@ import {
     getDoc,
     collection,
     addDoc,
+    getDocs,
+    query,
+    where,
+    orderBy,
+    limit,
+    updateDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
@@ -41,13 +47,31 @@ const missYouBtn =
 const missYouStatus =
     document.getElementById("missYouStatus");
 
+const dailyStatusCard =
+    document.getElementById("dailyStatusCard");
+
+const dailyStatusText =
+    document.getElementById("dailyStatusText");
+
+const dailyStatusBtn =
+    document.getElementById("dailyStatusBtn");
+
+const receivedMessageCard =
+    document.getElementById("receivedMessageCard");
+
+const receivedMessageText =
+    document.getElementById("receivedMessageText");
+
+const markMessageReadBtn =
+    document.getElementById("markMessageReadBtn");
+
 const logoutBtn =
     document.getElementById("logoutBtn");
 
 
 let currentUser = null;
 let currentUserData = null;
-
+let currentReceivedMessageId = null;
 
 
 function getLocalDateKey() {
@@ -69,29 +93,30 @@ function getLocalDateKey() {
 }
 
 
-function calculateDaysTogether(datingDate) {
+function calcularDiasJuntos(fechaNoviazgo) {
 
-    if (!datingDate) {
+    if (!fechaNoviazgo) {
 
         return null;
 
     }
 
-    let startDate;
+    let fechaInicio;
 
 
-    if (typeof datingDate === "string") {
+    if (typeof fechaNoviazgo === "string") {
 
-        startDate = new Date(
-            `${datingDate}T00:00:00`
+        fechaInicio = new Date(
+            `${fechaNoviazgo}T00:00:00`
         );
 
     } else if (
-        typeof datingDate === "object" &&
-        typeof datingDate.toDate === "function"
+        typeof fechaNoviazgo === "object" &&
+        typeof fechaNoviazgo.toDate === "function"
     ) {
 
-        startDate = datingDate.toDate();
+        fechaInicio =
+            fechaNoviazgo.toDate();
 
     } else {
 
@@ -100,118 +125,58 @@ function calculateDaysTogether(datingDate) {
     }
 
 
-    if (Number.isNaN(startDate.getTime())) {
+    if (Number.isNaN(fechaInicio.getTime())) {
 
         return null;
 
     }
 
 
-    const today = new Date();
+    const hoy = new Date();
 
-    startDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
+    fechaInicio.setHours(0, 0, 0, 0);
+    hoy.setHours(0, 0, 0, 0);
 
 
-    const difference =
-        today.getTime() -
-        startDate.getTime();
+    const diferencia =
+        hoy.getTime() -
+        fechaInicio.getTime();
 
-    const millisecondsPerDay =
+    const milisegundosPorDia =
         1000 * 60 * 60 * 24;
 
-    return Math.max(
-        Math.floor(
-            difference / millisecondsPerDay
-        ),
-        0
+
+    const dias = Math.floor(
+        diferencia /
+        milisegundosPorDia
     );
+
+
+    return Math.max(dias, 0);
 
 }
 
-
-function calculateConnectionIndex(record) {
-
-    const love =
-        Number(record.love || 0);
-
-    const happiness =
-        Number(record.happiness || 0);
-
-    const togetherDesire =
-        Number(record.togetherDesire || 0);
-
-    const sadness =
-        Number(record.sadness || 0);
-
-    const anger =
-        Number(record.anger || 0);
-
-    const stress =
-        Number(record.stress || 0);
-
-
-    /*
-        Las emociones positivas conservan
-        su valor.
-
-        Las emociones negativas se invierten:
-
-        tristeza 20 = bienestar 80
-    */
-
-    const sadnessBalance =
-        100 - sadness;
-
-    const angerBalance =
-        100 - anger;
-
-    const stressBalance =
-        100 - stress;
-
-
-    const total =
-        love +
-        happiness +
-        togetherDesire +
-        sadnessBalance +
-        angerBalance +
-        stressBalance;
-
-
-    const connectionIndex =
-        Math.round(total / 6);
-
-
-    return Math.min(
-        Math.max(connectionIndex, 0),
-        100
-    );
-
-}
-
-
-function updateProgressBar(
-    bar,
-    textElement,
-    value
+function actualizarBarra(
+    barra,
+    texto,
+    valor
 ) {
 
-    const safeValue = Math.min(
-        Math.max(Number(value) || 0, 0),
+    const valorSeguro = Math.min(
+        Math.max(Number(valor) || 0, 0),
         100
     );
 
-    bar.style.width =
-        `${safeValue}%`;
+    barra.style.width =
+        `${valorSeguro}%`;
 
-    textElement.textContent =
-        `${safeValue}%`;
+    texto.textContent =
+        `${valorSeguro}%`;
 
 }
 
 
-function clearDailyIndicators() {
+function limpiarIndicadores() {
 
     connectionBar.style.width = "0%";
     connectionValue.textContent = "--%";
@@ -222,63 +187,100 @@ function clearDailyIndicators() {
 }
 
 
-async function loadTodayRecord(userId) {
+function calcularIndiceConexion(registro) {
 
-    const dateKey =
-        getLocalDateKey();
+    const amor =
+        Number(registro.love || 0);
 
-    const recordId =
-        `${userId}_${dateKey}`;
+    const felicidad =
+        Number(registro.happiness || 0);
 
-    const recordReference = doc(
-        db,
-        "dailyRecords",
-        recordId
+    const ganas =
+        Number(registro.togetherDesire || 0);
+
+    const tristeza =
+        Number(registro.sadness || 0);
+
+    const enojo =
+        Number(registro.anger || 0);
+
+    const estres =
+        Number(registro.stress || 0);
+
+
+    const equilibrioTristeza =
+        100 - tristeza;
+
+    const equilibrioEnojo =
+        100 - enojo;
+
+    const equilibrioEstres =
+        100 - estres;
+
+
+    const total =
+        amor +
+        felicidad +
+        ganas +
+        equilibrioTristeza +
+        equilibrioEnojo +
+        equilibrioEstres;
+
+
+    const indice =
+        Math.round(total / 6);
+
+
+    return Math.min(
+        Math.max(indice, 0),
+        100
     );
-
-    const recordSnapshot =
-        await getDoc(recordReference);
-
-
-    if (!recordSnapshot.exists()) {
-
-        clearDailyIndicators();
-
-        return null;
-
-    }
-
-
-    const record =
-        recordSnapshot.data();
-
-
-    const connectionIndex =
-        calculateConnectionIndex(record);
-
-    const togetherDesire =
-        Number(record.togetherDesire || 0);
-
-
-    updateProgressBar(
-        connectionBar,
-        connectionValue,
-        connectionIndex
-    );
-
-    updateProgressBar(
-        relationshipBar,
-        relationshipValue,
-        togetherDesire
-    );
-
-
-    return record;
 
 }
 
 
-function showPartnerInformation(userData) {
+async function cargarDatosUsuario(user) {
+
+    const referenciaUsuario = doc(
+        db,
+        "users",
+        user.uid
+    );
+
+    const documentoUsuario =
+        await getDoc(referenciaUsuario);
+
+
+    if (!documentoUsuario.exists()) {
+
+        currentUserData = {
+
+            displayName:
+                user.email?.split("@")[0] ||
+                "Usuario",
+
+            partnerId: null,
+
+            partnerName: null,
+
+            datingDate: null,
+
+            linked: false
+
+        };
+
+        return;
+
+    }
+
+
+    currentUserData =
+        documentoUsuario.data();
+
+}
+
+
+function mostrarPareja(userData) {
 
     if (
         userData.linked === true &&
@@ -300,7 +302,8 @@ function showPartnerInformation(userData) {
             </p>
 
             <p>
-                Ya pueden compartir sus registros diarios.
+                Ya pueden compartir emociones,
+                mensajes y registros diarios.
             </p>
 
         `;
@@ -336,50 +339,358 @@ function showPartnerInformation(userData) {
 
 }
 
-async function loadUserData(user) {
 
-    const userReference = doc(
+async function cargarRegistroDeHoy() {
+
+    const fecha = getLocalDateKey();
+
+    const registroId =
+        `${currentUser.uid}_${fecha}`;
+
+    const referenciaRegistro = doc(
         db,
-        "users",
-        user.uid
+        "dailyRecords",
+        registroId
     );
 
-    const userSnapshot =
-        await getDoc(userReference);
+    const documentoRegistro =
+        await getDoc(referenciaRegistro);
 
 
-    if (!userSnapshot.exists()) {
+    if (!documentoRegistro.exists()) {
 
-        currentUserData = {
+        limpiarIndicadores();
 
-            displayName:
-                user.email?.split("@")[0] ||
-                "Usuario",
+        dailyStatusText.textContent =
+            "Todavía no has completado tu registro de hoy.";
 
-            datingDate: null,
+        dailyStatusBtn.hidden = false;
 
-            partnerId: null,
+        return null;
 
-            partnerName: null,
+    }
 
-            linked: false
 
-        };
+    const registro =
+        documentoRegistro.data();
+
+
+    const indice =
+        calcularIndiceConexion(registro);
+
+    actualizarBarra(
+        connectionBar,
+        connectionValue,
+        indice
+    );
+
+    actualizarBarra(
+        relationshipBar,
+        relationshipValue,
+        registro.togetherDesire
+    );
+
+
+    dailyStatusText.textContent =
+        "Ya completaste tu registro de hoy ❤️";
+
+    dailyStatusBtn.hidden = true;
+
+
+    return registro;
+
+}
+
+
+async function verificarRegistroPareja() {
+
+    if (!currentUserData?.partnerId) {
 
         return;
 
     }
 
 
-    currentUserData =
-        userSnapshot.data();
+    const fecha = getLocalDateKey();
+
+    const registroParejaId =
+        `${currentUserData.partnerId}_${fecha}`;
+
+    const referenciaRegistroPareja = doc(
+        db,
+        "dailyRecords",
+        registroParejaId
+    );
+
+    const documentoRegistroPareja =
+        await getDoc(referenciaRegistroPareja);
+
+
+    if (documentoRegistroPareja.exists()) {
+
+        dailyStatusText.textContent +=
+            " Tu pareja también completó el suyo 💞";
+
+    } else {
+
+        dailyStatusText.textContent +=
+            " Tu pareja todavía no ha respondido.";
+
+    }
 
 }
 
 
-async function loadDashboard(user) {
+async function enviarTeExtrano() {
 
-    await loadUserData(user);
+    if (
+        !currentUser ||
+        !currentUserData?.partnerId
+    ) {
+
+        missYouStatus.textContent =
+            "Primero debes vincular una pareja.";
+
+        missYouStatus.className =
+            "miss-you-status error";
+
+        return;
+
+    }
+
+
+    try {
+
+        missYouBtn.disabled = true;
+
+        missYouBtn.textContent =
+            "Enviando...";
+
+
+        const relationshipId = [
+            currentUser.uid,
+            currentUserData.partnerId
+        ]
+            .sort()
+            .join("_");
+
+
+        await addDoc(
+            collection(
+                db,
+                "missYouMessages"
+            ),
+            {
+
+                senderId:
+                    currentUser.uid,
+
+                senderName:
+                    currentUserData.displayName ||
+                    currentUser.email?.split("@")[0] ||
+                    "Tu pareja",
+
+                receiverId:
+                    currentUserData.partnerId,
+
+                relationshipId,
+
+                message:
+                    "Te extraño 💌",
+
+                read: false,
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        missYouStatus.textContent =
+            "Mensaje enviado a tu pareja 💌";
+
+        missYouStatus.className =
+            "miss-you-status success";
+
+        missYouBtn.textContent =
+            "💌 Enviado";
+
+
+        setTimeout(() => {
+
+            missYouBtn.disabled = false;
+
+            missYouBtn.textContent =
+                "💌 Te extraño";
+
+            missYouStatus.textContent = "";
+
+            missYouStatus.className =
+                "miss-you-status";
+
+        }, 3000);
+
+    } catch (error) {
+
+        console.error(
+            "Error al enviar Te extraño:",
+            error
+        );
+
+        missYouStatus.textContent =
+            "No se pudo enviar el mensaje.";
+
+        missYouStatus.className =
+            "miss-you-status error";
+
+        missYouBtn.disabled = false;
+
+        missYouBtn.textContent =
+            "💌 Te extraño";
+
+    }
+
+}
+
+
+async function cargarMensajeRecibido() {
+
+    try {
+
+        const mensajesQuery = query(
+            collection(
+                db,
+                "missYouMessages"
+            ),
+            where(
+                "receiverId",
+                "==",
+                currentUser.uid
+            ),
+            where(
+                "read",
+                "==",
+                false
+            ),
+            orderBy(
+                "createdAt",
+                "desc"
+            ),
+            limit(1)
+        );
+
+
+        const mensajesSnapshot =
+            await getDocs(mensajesQuery);
+
+
+        if (mensajesSnapshot.empty) {
+
+            receivedMessageCard.hidden = true;
+
+            currentReceivedMessageId = null;
+
+            return;
+
+        }
+
+
+        const mensajeDocumento =
+            mensajesSnapshot.docs[0];
+
+        const mensaje =
+            mensajeDocumento.data();
+
+
+        currentReceivedMessageId =
+            mensajeDocumento.id;
+
+
+        receivedMessageText.textContent =
+            `${mensaje.senderName || "Tu pareja"} te extraña 💌`;
+
+        receivedMessageCard.hidden = false;
+
+    } catch (error) {
+
+        console.error(
+            "Error al cargar mensajes recibidos:",
+            error
+        );
+
+        /*
+            Esta consulta puede solicitar
+            crear un índice en Firestore.
+        */
+
+    }
+
+}
+
+
+async function marcarMensajeComoVisto() {
+
+    if (!currentReceivedMessageId) {
+
+        return;
+
+    }
+
+
+    try {
+
+        markMessageReadBtn.disabled = true;
+
+        markMessageReadBtn.textContent =
+            "Guardando...";
+
+
+        const referenciaMensaje = doc(
+            db,
+            "missYouMessages",
+            currentReceivedMessageId
+        );
+
+
+        await updateDoc(
+            referenciaMensaje,
+            {
+                read: true,
+                readAt: serverTimestamp()
+            }
+        );
+
+
+        receivedMessageCard.hidden = true;
+
+        currentReceivedMessageId = null;
+
+        markMessageReadBtn.disabled = false;
+
+        markMessageReadBtn.textContent =
+            "Marcar como visto";
+
+    } catch (error) {
+
+        console.error(
+            "Error al marcar mensaje como visto:",
+            error
+        );
+
+        markMessageReadBtn.disabled = false;
+
+        markMessageReadBtn.textContent =
+            "Marcar como visto";
+
+    }
+
+}
+
+
+async function cargarDashboard(user) {
+
+    await cargarDatosUsuario(user);
 
 
     userName.textContent =
@@ -388,26 +699,28 @@ async function loadDashboard(user) {
         "Usuario";
 
 
-    const days =
-        calculateDaysTogether(
+    const dias =
+        calcularDiasJuntos(
             currentUserData.datingDate
         );
 
 
     daysTogether.textContent =
-        days === null
+        dias === null
             ? "--"
-            : days;
+            : dias;
 
 
-    showPartnerInformation(
+    mostrarPareja(
         currentUserData
     );
 
 
-    await loadTodayRecord(
-        user.uid
-    );
+    await cargarRegistroDeHoy();
+
+    await verificarRegistroPareja();
+
+    await cargarMensajeRecibido();
 
 }
 
@@ -425,17 +738,18 @@ onAuthStateChanged(
 
         }
 
+
         currentUser = user;
 
 
         try {
 
-            await loadDashboard(user);
+            await cargarDashboard(user);
 
         } catch (error) {
 
             console.error(
-                "Error al cargar el dashboard:",
+                "Error al cargar dashboard:",
                 error
             );
 
@@ -445,7 +759,10 @@ onAuthStateChanged(
 
             daysTogether.textContent = "--";
 
-            clearDailyIndicators();
+            limpiarIndicadores();
+
+            dailyStatusText.textContent =
+                "No se pudo cargar la información.";
 
         }
 
@@ -456,117 +773,13 @@ onAuthStateChanged(
 
 missYouBtn.addEventListener(
     "click",
-    async () => {
-
-        if (
-            !currentUser ||
-            !currentUserData?.partnerId
-        ) {
-
-            missYouStatus.textContent =
-                "Primero debes vincular una pareja.";
-
-            missYouStatus.className =
-                "miss-you-status error";
-
-            return;
-
-        }
+    enviarTeExtrano
+);
 
 
-        try {
-
-            missYouBtn.disabled = true;
-
-            missYouBtn.textContent =
-                "Enviando...";
-
-
-            const relationshipId = [
-                currentUser.uid,
-                currentUserData.partnerId
-            ]
-                .sort()
-                .join("_");
-
-
-            await addDoc(
-                collection(
-                    db,
-                    "missYouMessages"
-                ),
-                {
-
-                    senderId:
-                        currentUser.uid,
-
-                    senderName:
-                        currentUserData.displayName ||
-                        currentUser.email?.split("@")[0] ||
-                        "Tu pareja",
-
-                    receiverId:
-                        currentUserData.partnerId,
-
-                    relationshipId,
-
-                    message:
-                        "Te extraño 💌",
-
-                    read: false,
-
-                    createdAt:
-                        serverTimestamp()
-
-                }
-            );
-
-
-            missYouStatus.textContent =
-                "Tu pareja recibirá tu mensaje 💌";
-
-            missYouStatus.className =
-                "miss-you-status success";
-
-            missYouBtn.textContent =
-                "💌 Enviado";
-
-
-            setTimeout(() => {
-
-                missYouBtn.disabled = false;
-
-                missYouBtn.textContent =
-                    "💌 Te extraño";
-
-                missYouStatus.textContent = "";
-
-                missYouStatus.className =
-                    "miss-you-status";
-
-            }, 4000);
-
-        } catch (error) {
-
-            console.error(
-                "Error al enviar Te extraño:",
-                error
-            );
-
-            missYouStatus.textContent =
-                "No se pudo enviar el mensaje.";
-
-            missYouStatus.className =
-                "miss-you-status error";
-
-            missYouBtn.disabled = false;
-
-            missYouBtn.textContent =
-                "💌 Te extraño";
-
-        }
-
-    }
+markMessageReadBtn.addEventListener(
+    "click",
+    marcarMensajeComoVisto
 );
 
 
@@ -586,6 +799,10 @@ logoutBtn.addEventListener(
             console.error(
                 "Error al cerrar sesión:",
                 error
+            );
+
+            alert(
+                "No se pudo cerrar la sesión."
             );
 
         }
