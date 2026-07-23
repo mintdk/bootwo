@@ -1478,3 +1478,28 @@ input[type="date"]{
     color: #9a3333;
 
 }
+.miss-you-status {
+
+    min-height: 24px;
+
+    margin-top: 12px;
+
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+
+}
+
+
+.miss-you-status.success {
+
+    color: #357548;
+
+}
+
+
+.miss-you-status.error {
+
+    color: #a33a3a;
+
+}
