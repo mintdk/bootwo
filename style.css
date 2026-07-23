@@ -1503,3 +1503,140 @@ input[type="date"]{
     color: #a33a3a;
 
 }
+
+.dashboard-notice {
+
+    padding: 28px;
+
+    text-align: center;
+
+}
+
+
+.dashboard-notice h2 {
+
+    margin-bottom: 10px;
+
+}
+
+
+.dashboard-notice p {
+
+    margin-bottom: 18px;
+
+}
+
+
+.received-message-card {
+
+    padding: 30px;
+
+    text-align: center;
+
+    border-color: var(--rosa);
+
+}
+
+
+.received-message-card h2 {
+
+    margin-bottom: 12px;
+
+}
+
+
+.received-message-card p {
+
+    margin-bottom: 18px;
+
+    font-size: 1.05rem;
+
+}
+
+
+.received-message-card[hidden] {
+
+    display: none;
+
+}
+
+
+.miss-you-status {
+
+    min-height: 24px;
+
+    margin-top: 12px;
+
+    text-align: center;
+
+    font-size: 0.92rem;
+    font-weight: 700;
+
+}
+
+
+.miss-you-status.success {
+
+    color: #367849;
+
+}
+
+
+.miss-you-status.error {
+
+    color: #a63c3c;
+
+}
+
+
+.progress {
+
+    width: 100%;
+    height: 14px;
+
+    margin: 12px 0 8px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background-color: #eef3f8;
+
+}
+
+
+.progress-bar {
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    background-color: var(--rosa);
+
+    transition: width 0.4s ease;
+
+}
+
+
+#connectionValue,
+#relationshipValue,
+#daysTogether {
+
+    margin-top: 8px;
+
+    font-size: 1.3rem;
+    font-weight: 800;
+
+}
+
+
+@media(max-width: 768px) {
+
+    .dashboard-notice,
+    .received-message-card {
+
+        padding: 24px 18px;
+
+    }
+
+}
