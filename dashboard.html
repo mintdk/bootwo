@@ -4,52 +4,81 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Dashboard | Bootwo</title>
 
-    <link rel="icon" href="bootwo/assets/logo.png">
+    <link
+        rel="icon"
+        href="bootwo/assets/logo.png">
 
-    <link rel="stylesheet" href="global.css">
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="global.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css">
 
 </head>
 
 <body>
 
-
     <header class="navbar">
 
         <div class="logo-container">
 
-            <img src="bootwo/assets/logo.png" class="logo" alt="Bootwo">
+            <img
+                src="bootwo/assets/logo.png"
+                class="logo"
+                alt="Bootwo">
 
         </div>
 
         <nav class="dashboard-nav">
 
-            <a href="dashboard.html">Inicio</a>
-            <a href="historial.html">Historial</a>
-            <a href="perfil.html">Perfil</a>
+            <a href="dashboard.html">
+                Inicio
+            </a>
 
-            <button id="logoutBtn" class="btn-login">
+            <a href="historial.html">
+                Historial
+            </a>
+
+            <a href="perfil.html">
+                Perfil
+            </a>
+
+            <button
+                id="logoutBtn"
+                class="btn-login">
+
                 Cerrar sesión
+
             </button>
 
         </nav>
 
     </header>
 
+
     <main class="dashboard">
 
         <section class="card welcome-card">
 
             <h1>
+
                 Holi,
+
                 <span id="userName">
                     Usuario
                 </span>
+
                 ❤️
+
             </h1>
 
             <p class="welcome-message">
@@ -58,38 +87,49 @@
 
             </p>
 
+
             <div class="info-grid">
 
                 <div class="info-item">
 
-                    <h3>📅 Días juntos</h3>
+                    <h3>
+                        📅 Días juntos
+                    </h3>
 
-                    <p id="daysTogether">--</p>
+                    <p id="daysTogether">
+                        --
+                    </p>
 
                 </div>
 
+
                 <div class="info-item">
 
-                    <h3>❤️ Índice de conexión</h3>
+                    <h3>
+                        ❤️ Índice de conexión
+                    </h3>
 
                     <div class="progress">
 
                         <div
                             class="progress-bar"
                             id="connectionBar"
-                            style="width:0%;">
+                            style="width: 0%;">
                         </div>
 
                     </div>
 
-                    <p id="connectionValue">--%</p>
+                    <p id="connectionValue">
+                        --%
+                    </p>
 
                 </div>
+
 
                 <div class="info-item">
 
                     <h3>
-                        💞 Ganas de estar juntos 
+                        💞 Ganas de estar juntos
                     </h3>
 
                     <div class="progress">
@@ -97,116 +137,183 @@
                         <div
                             class="progress-bar"
                             id="relationshipBar"
-                            style="width:0%;">
+                            style="width: 0%;">
                         </div>
 
                     </div>
 
-                    <p id="relationshipValue">--%</p>
+                    <p id="relationshipValue">
+                        --%
+                    </p>
 
                 </div>
 
             </div>
 
-           <button
-    type="button"
-    id="missYouBtn"
-    class="btn-primary">
 
-    💌 Te extraño
+            <button
+                type="button"
+                id="missYouBtn"
+                class="btn-primary">
 
-</button>
+                💌 Te extraño
 
-<p
-    id="missYouStatus"
-    class="miss-you-status"
-    aria-live="polite">
-</p>
+            </button>
+
+            <p
+                id="missYouStatus"
+                class="miss-you-status"
+                aria-live="polite">
+            </p>
+
+        </section>
+
+
+        <section
+            class="card dashboard-notice"
+            id="dailyStatusCard">
+
+            <h2>
+                ❤️ Registro de hoy
+            </h2>
+
+            <p id="dailyStatusText">
+
+                Cargando tu registro diario...
+
+            </p>
+
+            <a
+                href="registrod.html"
+                id="dailyStatusBtn"
+                class="btn-primary">
+
+                Hacer registro diario
+
+            </a>
+
+        </section>
+
+
+        <section
+            class="card received-message-card"
+            id="receivedMessageCard"
+            hidden>
+
+            <h2>
+                💌 Tu pareja te extraña
+            </h2>
+
+            <p id="receivedMessageText">
+
+                Tu pareja te envió un mensaje.
+
+            </p>
+
+            <button
+                type="button"
+                id="markMessageReadBtn"
+                class="btn-primary">
+
+                Marcar como visto
+
+            </button>
 
         </section>
 
 
         <section class="quick-access">
 
-            <a href="registrod.html" class="card quick-card">
+            <a
+                href="registrod.html"
+                class="card quick-card">
 
                 ❤️
 
-                <h3>Registro diario</h3>
+                <h3>
+                    Registro diario
+                </h3>
 
             </a>
 
-            <a href="historial.html" class="card quick-card">
+
+            <a
+                href="historial.html"
+                class="card quick-card">
 
                 📅
 
-                <h3>Historial</h3>
+                <h3>
+                    Historial
+                </h3>
 
             </a>
 
-            <a href="#" class="card quick-card">
+
+            <a
+                href="estadisticas.html"
+                class="card quick-card">
 
                 📊
 
-                <h3>Estadísticas</h3>
+                <h3>
+                    Estadísticas
+                </h3>
 
             </a>
 
-            <a href="perfil.html" class="card quick-card">
+
+            <a
+                href="perfil.html"
+                class="card quick-card">
 
                 👤
 
-                <h3>Perfil</h3>
+                <h3>
+                    Perfil
+                </h3>
 
             </a>
 
         </section>
+
 
         <section
             class="card partner-card"
             id="partnerCard">
 
             <h2>
-
                 💞 Pareja
-
             </h2>
 
             <p>
 
-                Aún no has vinculado una pareja.
+                Cargando información de la pareja...
 
             </p>
-
-            <a
-                href="vincular.html"
-                class="btn-primary">
-
-                Vincular pareja
-
-            </a>
 
         </section>
 
     </main>
 
+
     <footer>
 
         <p>
-
-            Bootwo  2026
-
+            Bootwo 2026
         </p>
 
         <p>
-
             Conociéndonos un día a la vez.
-
         </p>
 
     </footer>
 
-    <script type="module" src="dashboard.js"></script>
+
+    <script
+        type="module"
+        src="dashboard.js">
+    </script>
 
 </body>
 
