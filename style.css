@@ -650,3 +650,119 @@ html{
     color:white;
 
 }
+
+.card input{
+
+    width:100%;
+
+    padding:14px 18px;
+
+    margin-top:15px;
+
+    border:2px solid var(--azul);
+
+    border-radius:15px;
+
+    outline:none;
+
+    font-size:1rem;
+
+    transition:.3s;
+
+    background:white;
+
+}
+
+.card input:focus{
+
+    border-color:var(--rosa);
+
+    box-shadow:0 0 0 4px rgba(248,187,217,.18);
+
+}
+
+.card button{
+
+    margin-top:20px;
+
+    width:100%;
+
+}
+
+#generatedContainer{
+
+    margin-top:30px;
+
+    padding:25px;
+
+    border:2px dashed var(--rosa);
+
+    border-radius:20px;
+
+    background:#FFF9FC;
+
+    animation:fadeIn .4s ease;
+
+}
+
+#generatedContainer h3{
+
+    margin-bottom:10px;
+
+}
+
+#generatedCode{
+
+    margin:20px 0;
+
+    color:var(--rosa);
+
+    font-size:2rem;
+
+    letter-spacing:3px;
+
+    word-break:break-all;
+
+}
+
+.partner-card{
+
+    text-align:center;
+
+}
+
+.partner-card p{
+
+    line-height:1.8;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    #generatedCode{
+
+        font-size:1.5rem;
+
+        letter-spacing:2px;
+
+    }
+
+}
