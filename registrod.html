@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Registro diario | Bootwo</title>
+
+    <link
+        rel="icon"
+        href="bootwo/assets/logo.png">
+
+    <link
+        rel="stylesheet"
+        href="global.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <a
+            href="dashboard.html"
+            class="logo-container">
+
+            <img
+                src="bootwo/assets/logo.png"
+                class="logo"
+                alt="Bootwo">
+
+        </a>
+
+        <a
+            href="dashboard.html"
+            class="btn-login">
+
+            Volver al inicio
+
+        </a>
+
+    </header>
+
+
+    <main class="daily-page">
+
+        <section class="card daily-header">
+
+            <h1>❤️ Registro diario</h1>
+
+            <p>
+
+                Tómate un momento para expresar cómo te
+                sentiste hoy.
+
+            </p>
+
+            <p
+                id="dailyDate"
+                class="daily-date">
+
+                Hoy
+
+            </p>
+
+        </section>
+
+
+        <form
+            id="dailyForm"
+            class="card daily-form">
+
+            <div class="daily-introduction">
+
+                <h2>¿Cómo te sentiste hoy?</h2>
+
+                <p>
+
+                    Mueve cada indicador según la intensidad
+                    de la emoción.
+
+                </p>
+
+                <p class="scale-explanation">
+
+                    0 significa nada y 100 significa muchísimo.
+
+                </p>
+
+            </div>
+
+
+            <div class="emotion-field">
+
+                <div class="emotion-heading">
+
+                    <label for="love">
+                        ❤️ Amor
+                    </label>
+
+                    <span
+                        id="loveValue"
+                        class="emotion-value">
+
+                        50%
+
+                    </span>
+
+                </div>
+
+                <input
+                    type="range"
+                    id="love"
+                    name="love"
+                    min="0"
+                    max="100"
+                    value="50"
+                    step="1">
+
+                <div class="range-labels">
+
+                    <span>Nada</span>
+                    <span>Muchísimo</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="emotion-field">
+
+                <div class="emotion-heading">
+
+                    <label for="happiness">
+                        😊 Felicidad
+                    </label>
+
+                    <span
+                        id="happinessValue"
+                        class="emotion-value">
+
+                        50%
+
+                    </span>
+
+                </div>
+
+                <input
+                    type="range"
+                    id="happiness"
+                    name="happiness"
+                    min="0"
+                    max="100"
+                    value="50"
+                    step="1">
+
+                <div class="range-labels">
+
+                    <span>Nada</span>
+                    <span>Muchísimo</span>
+
+                </div>
+
+            </div>
+
+            <div class="emotion-field">
+
+                <div class="emotion-heading">
+
+                    <label for="sadness">
+                        😢 Tristeza
+                    </label>
+
+                    <span
+                        id="sadnessValue"
+                        class="emotion-value">
+
+                        50%
+
+                    </span>
+
+                </div>
+
+                <input
+                    type="range"
+                    id="sadness"
+                    name="sadness"
+                    min="0"
+                    max="100"
+                    value="50"
+                    step="1">
+
+                <div class="range-labels">
+
+                    <span>Nada</span>
+                    <span>Muchísima</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="emotion-field">
+
+                <div class="emotion-heading">
+
+                    <label for="anger">
+                        😠 Enojo
+                    </label>
+
+                    <span
+                        id="angerValue"
+                        class="emotion-value">
+
+                        50%
+
+                    </span>
+
+                </div>
+
+                <input
+                    type="range"
+                    id="anger"
+                    name="anger"
+                    min="0"
+                    max="100"
+                    value="50"
+                    step="1">
+
+                <div class="range-labels">
+
+                    <span>Nada</span>
+                    <span>Muchísimo</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Estrés -->
+
+            <div class="emotion-field">
+
+                <div class="emotion-heading">
+
+                    <label for="stress">
+                        😵‍💫 Estrés
+                    </label>
+
+                    <span
+                        id="stressValue"
+                        class="emotion-value">
+
+                        50%
+
+                    </span>
+
+                </div>
+
+                <input
+                    type="range"
+                    id="stress"
+                    name="stress"
+                    min="0"
+                    max="100"
+                    value="50"
+                    step="1">
+
+                <div class="range-labels">
+
+                    <span>Nada</span>
+                    <span>Muchísimo</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="emotion-field relationship-emotion">
+
+                <div class="emotion-heading">
+
+                    <label for="togetherDesire">
+                        💞 Ganas de estar juntos
+                    </label>
+
+                    <span
+                        id="togetherDesireValue"
+                        class="emotion-value">
+
+                        50%
+
+                    </span>
+
+                </div>
+
+                <input
+                    type="range"
+                    id="togetherDesire"
+                    name="togetherDesire"
+                    min="0"
+                    max="100"
+                    value="50"
+                    step="1">
+
+                <div class="range-labels">
+
+                    <span>Pocas</span>
+                    <span>Muchísimas</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="daily-message-field">
+
+                <label for="dailyMessage">
+
+                    💬 ¿Quieres contarle algo a tu pareja?
+
+                </label>
+
+                <textarea
+                    id="dailyMessage"
+                    name="dailyMessage"
+                    maxlength="500"
+                    rows="6"
+                    placeholder="Escribe cómo estuvo tu día, qué necesitas o qué te gustaría compartir..."></textarea>
+
+                <div class="message-details">
+
+                    <span>
+                        Este mensaje es opcional.
+                    </span>
+
+                    <span id="messageCounter">
+                        0/500
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="dailyMessageResult"
+                class="form-message"
+                aria-live="polite">
+            </div>
+
+
+            <button
+                type="submit"
+                id="saveDailyBtn"
+                class="btn-primary daily-submit">
+
+                Guardar mi registro ❤️
+
+            </button>
+
+        </form>
+
+
+        <section class="card daily-privacy">
+
+            <h2>🔒 Un espacio seguro</h2>
+
+            <p>
+
+                Las respuestas de tu pareja estarán disponibles
+                cuando ambos hayan completado el registro del día.
+
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>Bootwo 2026</p>
+
+        <p>Conociéndonos un día a la vez.</p>
+
+    </footer>
+
+
+    <script type="module" src="registrod.js"></script>
+
+</body>
+
+</html>
