@@ -655,13 +655,17 @@ html{
 
     width:100%;
 
-    padding:14px 18px;
+    padding:15px 18px;
 
     margin-top:15px;
 
+    background:var(--blanco);
+
+    color:var(--texto);
+
     border:2px solid var(--azul);
 
-    border-radius:15px;
+    border-radius:18px;
 
     outline:none;
 
@@ -669,7 +673,17 @@ html{
 
     transition:.3s;
 
-    background:white;
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+
+}
+input[type="date"]{
+
+    border-radius:18px;
+
+    appearance:none;
+    -webkit-appearance:none;
 
 }
 
