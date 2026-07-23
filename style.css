@@ -1439,3 +1439,42 @@ input[type="date"]{
     }
 
 }
+
+.form-message {
+
+    min-height: 24px;
+
+    padding: 0;
+
+    border-radius: 14px;
+
+    text-align: center;
+    font-weight: 700;
+
+}
+
+
+.form-message.success {
+
+    padding: 13px 16px;
+
+    background-color: #e6f7ec;
+
+    border: 2px solid #9bd5ad;
+
+    color: #28683b;
+
+}
+
+
+.form-message.error {
+
+    padding: 13px 16px;
+
+    background-color: #fff0f0;
+
+    border: 2px solid #f2aaaa;
+
+    color: #9a3333;
+
+}
